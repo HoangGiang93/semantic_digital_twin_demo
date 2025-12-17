@@ -1,0 +1,3 @@
+[submodule "Multiverse-ServerClient"]
+	path = Multiverse-ServerClient
+	url = git@github.com:Multiverse-Framework/Multiverse-ServerClient.git
