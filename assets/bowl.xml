@@ -22,7 +22,7 @@
     <worldbody>
         <body name="bowl" pos="2.4 2.5 0.97">
             <freejoint />
-            <body name="bowl_body" pos="0 0 0">
+            <body name="bowl_body" pos="0 0 -0.038">
                 <geom name="bowl_bottom" type="mesh" mesh="bowl_bottom" class="bowl_collision" />
                 <geom name="bowl_side_1_1" type="mesh" euler="0 0 0" mesh="bowl_side_1" class="bowl_collision" />
                 <geom name="bowl_side_1_2" type="mesh" euler="0 0 0" mesh="bowl_side_2" class="bowl_collision" />
