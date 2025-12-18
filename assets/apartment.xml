@@ -810,7 +810,7 @@
                 <geom name="geom_322" class="apartment_collision" size="0.05471 0.001 0.047787" pos="0 0.209978 0" type="box"/>
                 <geom name="geom_323" class="apartment_visual" pos="-0.000146205 -0.000982955 -0.00691971" quat="0.515051 0.512558 -0.485865 0.485738" type="mesh" material="SM_Fridge_Door_Tray_01" mesh="SM_Fridge_Door_Tray_01"/>
               </body>
-              <body gravcomp="1" name="fridge_door1_handle" pos="-0.027991 -0.465343 -0.3616" quat="0.707107 0.707107 0 0">
+              <body gravcomp="1" name="fridge_door1_handle" pos="-0.027991 -0.465343 -0.30736039" quat="0.707107 0.707107 0 0">
                 <inertial pos="0.00608124 7.62691e-06 0.000219453" quat="0.707535 -0.0001654 -4.86875e-05 0.706679" mass="0.101418" diaginertia="0.000334346 0.000326533 1.03303e-05"/>
                 <geom name="geom_324" class="apartment_visual" pos="0.00753596 3.13834e-07 -1.61273e-05" quat="0.707258 0.000144565 8.61629e-05 0.706956" type="mesh" mesh="SM_Kitchen_Handle"/>
                 <geom name="geom_325" class="apartment_collision" size="0.01 0.0065 0.0065" pos="0.0164985 0 0.08" type="box"/>

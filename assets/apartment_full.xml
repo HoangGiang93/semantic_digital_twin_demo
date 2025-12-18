@@ -1,12 +1,16 @@
 <mujoco model="apartment">
 
-  <include file="apartment.xml"/>
+  <include file="apartment_no_visual.xml"/>
 
   <include file="milk_box.xml"/>
 
   <include file="bowl.xml"/>
 
   <include file="shadow_hands.xml"/>
+
+  <option timestep="0.005" integrator="implicitfast">
+    <flag multiccd="enable" />
+  </option>
 
   <keyframe>
     <key name="home" qpos="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2.4 2.8 1.04 1 0 0 0 2.4 2.5 0.97 1 0 0 0 1.5 2.6 1 0.707107 0 0.707107 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.5 2.4 1 0 0.707107 0 0.707107 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
