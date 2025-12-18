@@ -3,7 +3,6 @@ from multiverse_simulator import MultiverseViewer
 from semantic_digital_twin.adapters.multi_sim import MujocoSim
 import os
 import time
-import cv2
 
 if __name__ == "__main__":
     scene_path = os.path.join(os.path.dirname(__file__), "..", "assets", "apartment_with_shadow_hands.xml")
