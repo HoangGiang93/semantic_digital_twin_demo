@@ -48,6 +48,8 @@ if __name__ == '__main__':
 
     # Load the CSV file to examine its contents
     data_path = args.data_path
+    if not os.path.abspath(data_path):
+        data_path = os.path.join(os.path.dirname(__file__), data_path)
     data = pd.read_csv(data_path)
 
     # Display the first few rows of the data to understand its structure
