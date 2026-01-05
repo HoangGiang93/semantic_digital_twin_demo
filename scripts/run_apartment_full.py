@@ -1,11 +1,16 @@
 from typing import Dict, Any, List, Tuple
 
 from semantic_digital_twin.adapters.mjcf import MJCFParser
-from multiverse_simulator import MultiverseViewer
+from multiverse_simulator import (
+    MultiverseViewer,
+    MultiverseSimulatorState,
+    MultiverseCallbackResult,
+)
 from semantic_digital_twin.adapters.multi_sim import MujocoSim
 import os
 import time
 import pandas
+from threading import Thread
 
 
 def get_data_from_csv(
@@ -26,6 +31,46 @@ def get_data_from_csv(
                 data[obj_name][attribute_name] = df[keys].values.tolist()
 
     return time_stamp, data
+
+
+def get_contact_data(mujoco_sim: MujocoSim, N_tries=100):
+    while mujoco_sim.simulator.state == MultiverseSimulatorState.RUNNING:
+        left_hand_contact_bodies = mujoco_sim.simulator.get_contact_bodies(
+            body_name="lh_palm", including_children=True
+        )
+        right_hand_contact_bodies = mujoco_sim.simulator.get_contact_bodies(
+            body_name="rh_palm", including_children=True
+        )
+        assert (
+            left_hand_contact_bodies.type
+            == MultiverseCallbackResult.ResultType.SUCCESS_WITHOUT_EXECUTION
+        ), "Failed to get left hand contact bodies"
+        assert (
+            right_hand_contact_bodies.type
+            == MultiverseCallbackResult.ResultType.SUCCESS_WITHOUT_EXECUTION
+        ), "Failed to get right hand contact bodies"
+        contact_bodies = left_hand_contact_bodies.result.union(
+            right_hand_contact_bodies.result
+        )
+        if len(left_hand_contact_bodies.result) > 0:
+            print(f"Left hand has contact with:", left_hand_contact_bodies.result)
+        if len(right_hand_contact_bodies.result) > 0:
+            print(f"Right hand has contact with:", right_hand_contact_bodies.result)
+        for contact_body in contact_bodies:
+            for _ in range(N_tries):
+                contact_with = mujoco_sim.simulator.get_contact_bodies(
+                    body_name=contact_body, including_children=True
+                )
+                assert (
+                    contact_with.type
+                    == MultiverseCallbackResult.ResultType.SUCCESS_WITHOUT_EXECUTION
+                ), f"Failed to get contact bodies for {contact_body}"
+                if len(contact_with.result) > 0:
+                    print(f"  {contact_body} is in contact with:", contact_with.result)
+                    break
+            else:
+                print(f"  {contact_body} contact bodies could not be determined.")
+        time.sleep(0.1)
 
 
 if __name__ == "__main__":
@@ -108,13 +153,19 @@ if __name__ == "__main__":
     time.sleep(1)
     print("Everything is ready")
 
+    contact_thread = Thread(target=get_contact_data, args=(multi_sim,), daemon=True)
+    contact_thread.start()
+
+    start_idx = 0
+    stop_idx = len(time_stamp) - 1
+    current_idx = start_idx
+    time_offset = time_stamp[current_idx]
     start_time = time.time()
-    current_time = time.time() - start_time
-    current_idx = 0
+    current_time = time.time() + time_offset - start_time
     try:
-        while current_idx < len(time_stamp):
+        while current_idx < stop_idx:
             last_time = current_time
-            current_time = time.time() - start_time
+            current_time = time.time() + time_offset - start_time
             while (
                 current_idx < len(time_stamp) and time_stamp[current_idx] < current_time
             ):
@@ -126,7 +177,7 @@ if __name__ == "__main__":
                     write_objects[obj_name][value_name][:] = value_list[current_idx]
             viewer.write_objects = write_objects
             time.sleep(time_stamp[current_idx + 1] - time_stamp[current_idx])
-        time.sleep(10)
+        time.sleep(1000)
 
     except KeyboardInterrupt:
         print("Stop simulation!")
